@@ -11,6 +11,8 @@ services:
         ipv4_address: 10.0.0.10
       peeringbr2:
         ipv4_address: 10.0.100.10
+      peeringbr3:
+        ipv4_address: 10.0.150.10
   peer2:
     build: .
     hostname: peer2
@@ -29,7 +31,37 @@ services:
     networks:
       peeringbr2:
         ipv4_address: 10.0.100.11
-
+  peer4:
+    build: .
+    hostname: peer4
+    privileged: true
+    volumes:
+      - ./conf/peer4/etc/bird:/etc/bird
+    networks:
+      peeringbr3:
+        ipv4_address: 10.0.150.11
+  client1:
+    build: .
+    hostname: client1
+    privileged: true
+    networks:
+      peeringbr1:
+        ipv4_address: 10.0.0.31
+  client2:
+    build: .
+    hostname: client2
+    privileged: true
+    networks:
+      peeringbr1:
+        ipv4_address: 10.0.0.32
+    
+  client3:
+    build: .
+    hostname: client3
+    privileged: true
+    networks:
+      peeringbr1:
+        ipv4_address: 10.0.0.33
 networks:
   peeringbr1:
     driver: bridge
@@ -41,3 +73,8 @@ networks:
     ipam:
      config:
        - subnet: '10.0.100.0/24'
+  peeringbr3:
+    driver: bridge
+    ipam:
+     config:
+       - subnet: '10.0.150.0/24'
